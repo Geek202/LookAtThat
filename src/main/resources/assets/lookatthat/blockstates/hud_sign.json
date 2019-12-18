@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=south": {"model" : "lookatthat:block/hud_sign"},
+    "facing=north": {"model" : "lookatthat:block/hud_sign", "y": 180},
+    "facing=east": {"model" : "lookatthat:block/hud_sign", "y": 270},
+    "facing=west": {"model" : "lookatthat:block/hud_sign", "y": 90}
+  }
+}
