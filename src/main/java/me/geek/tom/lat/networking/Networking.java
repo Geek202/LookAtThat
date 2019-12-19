@@ -39,5 +39,13 @@ public class Networking {
                 PacketAdditionalData::new,
                 PacketAdditionalData::handle
         );
+
+        INSTANCE.registerMessage(
+                nextID(),
+                PacketUpdateSignText.class,
+                PacketUpdateSignText::toBytes,
+                PacketUpdateSignText::new,
+                PacketUpdateSignText::handle
+        );
     }
 }

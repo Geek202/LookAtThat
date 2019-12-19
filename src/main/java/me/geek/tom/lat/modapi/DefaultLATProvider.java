@@ -37,4 +37,14 @@ public class DefaultLATProvider implements IProvidesLATInfo {
     public INBT write() {
         return new StringNBT(message);
     }
+
+    /**
+     * Updates the current message.
+     * @param newMessage The new message to set
+     */
+
+    @Override
+    public void setMessage(String newMessage) {
+        this.message = newMessage;
+    }
 }

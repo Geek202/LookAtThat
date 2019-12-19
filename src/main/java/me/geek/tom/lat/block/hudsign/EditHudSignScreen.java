@@ -1,14 +1,24 @@
 package me.geek.tom.lat.block.hudsign;
 
+import me.geek.tom.lat.networking.Networking;
+import me.geek.tom.lat.networking.PacketUpdateSignText;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.dimension.DimensionType;
 
 public class EditHudSignScreen extends Screen {
     private TextFieldWidget textWiget;
+    private BlockPos pos;
+    private DimensionType type;
+    private String initialMessage;
 
-    public EditHudSignScreen() {
+    public EditHudSignScreen(BlockPos pos, DimensionType type, String initialMessage) {
         super(new StringTextComponent(""));
+        this.pos = pos;
+        this.type = type;
+        this.initialMessage = initialMessage;
     }
 
     @Override
@@ -16,7 +26,7 @@ public class EditHudSignScreen extends Screen {
         super.init();
         this.minecraft.keyboardListener.enableRepeatEvents(true);
 
-        this.textWiget = new TextFieldWidget(this.font, 50, 50, 150, 25, "test");
+        this.textWiget = new TextFieldWidget(this.font, 50, 50, 150, 25, "Message");
 
         // this.textWiget.setCanLoseFocus(false);
         // this.textWiget.changeFocus(true);
@@ -25,7 +35,9 @@ public class EditHudSignScreen extends Screen {
         this.textWiget.setEnableBackgroundDrawing(true);
         this.textWiget.setMaxStringLength(35);
         this.textWiget.setEnabled(true);
-        this.textWiget.setResponder(text -> System.out.println(text.toLowerCase()));
+        this.textWiget.setResponder(text -> Networking.INSTANCE.sendToServer(new PacketUpdateSignText(text, this.pos, this.type)));
+
+        // this.textWiget.setText(initialMessage); @TODO  Request message from server.
 
         this.children.add(this.textWiget);
     }
@@ -39,17 +51,10 @@ public class EditHudSignScreen extends Screen {
 
     @Override
     public boolean keyPressed(int key, int p_keyPressed_2_, int p_keyPressed_3_) {
-        System.out.println(this.textWiget.getText());
-        System.out.println(this.textWiget.func_212955_f());
-
         if (key == 256) {
             this.minecraft.player.closeScreen();
         }
 
-        /*
-        if (this.textWiget.keyPressed(key, p_keyPressed_2_, p_keyPressed_3_) || this.textWiget.func_212955_f()) {
-            //return true;
-        }*/
         return super.keyPressed(key, p_keyPressed_2_, p_keyPressed_3_);
     }
 

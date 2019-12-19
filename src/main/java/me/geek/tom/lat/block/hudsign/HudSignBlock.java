@@ -1,18 +1,17 @@
 package me.geek.tom.lat.block.hudsign;
 
+import me.geek.tom.lat.modapi.CapabilityLATInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -24,6 +23,7 @@ import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.atomic.AtomicReference;
 
 @SuppressWarnings("deprecation")
 public class HudSignBlock extends Block {
@@ -92,7 +92,14 @@ public class HudSignBlock extends Block {
         if (!world.isRemote)
             return true;
 
-        Minecraft.getInstance().displayGuiScreen(new EditHudSignScreen());
+        TileEntity te = world.getTileEntity(pos);
+        if (te != null) {
+            AtomicReference<String> msg = new AtomicReference<>();
+            te.getCapability(CapabilityLATInfo.LAT_INFO_CAPABILITY).ifPresent(handler -> {
+                msg.set(handler.getInfo());
+            });
+            Minecraft.getInstance().displayGuiScreen(new EditHudSignScreen(pos, world.dimension.getType(), "")); // @TODO Request message from server.
+        }
 
         return true;
     }

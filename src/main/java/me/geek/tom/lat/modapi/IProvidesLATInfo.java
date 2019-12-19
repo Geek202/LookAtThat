@@ -28,4 +28,14 @@ public interface IProvidesLATInfo {
      * @return The NBT tag to be written to the save.
      */
     INBT write();
+
+    /**
+     * Set the current message to the specified new one.
+     * This function can do nothing if you have an internal
+     * method of updating the message.
+     *
+     * @param newMessage The new message to set
+     */
+
+    void setMessage(String newMessage);
 }
