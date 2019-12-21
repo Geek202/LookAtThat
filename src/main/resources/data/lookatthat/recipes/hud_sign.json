@@ -1,0 +1,24 @@
+{
+    "type": "crafting_shaped",
+    "pattern":
+    [
+        "###",
+        "#X#",
+        "###"
+    ],
+    "key":
+    {
+        "#":
+        {
+            "item": "minecraft:iron_ingot"
+        },
+        "X":
+        {
+            "item": "minecraft:diamond"
+        }
+    },
+    "result":
+    {
+        "item": "lookatthat:hud_sign"
+    }
+}

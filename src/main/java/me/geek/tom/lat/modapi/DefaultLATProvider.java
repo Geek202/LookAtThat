@@ -25,7 +25,6 @@ public class DefaultLATProvider implements IProvidesLATInfo {
      */
     @Override
     public void read(INBT nbt) {
-        System.out.println(nbt);
         message = nbt.getString();
     }
 
