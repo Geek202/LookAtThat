@@ -25,7 +25,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicReference;
 
-@SuppressWarnings("deprecation")
 public class HudSignBlock extends Block {
     private static final VoxelShape NORTH_SIGN = Block.makeCuboidShape(1d, 4d, 16d, 15d, 12d, 15d);
     private static final VoxelShape SOUTH_SIGN = Block.makeCuboidShape(1d, 4d, 0d, 15d, 12d, 1d);
@@ -72,6 +71,8 @@ public class HudSignBlock extends Block {
                 return EAST_SIGN;
             case WEST:
                 return WEST_SIGN;
+            default:
+            	break;
         }
         return DEFAULT;
     }
