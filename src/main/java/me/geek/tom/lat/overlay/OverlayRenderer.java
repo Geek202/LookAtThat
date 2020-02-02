@@ -2,6 +2,7 @@ package me.geek.tom.lat.overlay;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -54,17 +55,12 @@ public class OverlayRenderer extends Screen {
         if (this.currentBlock.equals(Blocks.AIR) && this.useBlock)
             return;
 
-        GlStateManager.pushMatrix();
-
-        // GlStateManager.translatef(10.0F, 10.0F, 0.0F);
+        RenderSystem.pushMatrix();
 
         Minecraft mc = Minecraft.getInstance();
-
-        ItemRenderer itemRender = mc.getItemRenderer();
-
         ItemStack itemStack = new ItemStack(currentItem, 1);
 
-        GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
         String displayName = this.useBlock ? currentBlock.getNameTextComponent().getString() : itemStack.getDisplayName().getString();
         String modName;
 
@@ -87,7 +83,7 @@ public class OverlayRenderer extends Screen {
         fill(5, 5, width, this.hasAdditionalData ? 32 + 10 * this.additionalData.length : 32, 0x88000000);
 
         if (!this.useBlock)
-            this.itemRendererStack(itemRender, itemStack, 10, 10);
+            this.renderItemStack(itemStack, 10, 10);
         mc.fontRenderer.drawStringWithShadow(displayName, 32, 10, 0xFFFFFF);
         mc.fontRenderer.drawStringWithShadow(modName, 32, 20, 0x0055FF);
         if (this.hasAdditionalData) {
@@ -97,30 +93,30 @@ public class OverlayRenderer extends Screen {
                 i++;
             }
         }
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
     }
 
-    private void itemRendererStack(ItemRenderer itemRender, ItemStack itm, int x, int y) {
-        GlStateManager.color3f(1.0F, 1.0F, 1.0F);
+    private void renderItemStack(ItemStack itm, int x, int y) {
+        ItemRenderer itemRender = Minecraft.getInstance().getItemRenderer();
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0f);
 
-        if (!itm.isEmpty() && itm.getItem() != null) {
-            GlStateManager.pushMatrix();
-            GlStateManager.translatef(0.0F, 0.0F, 32.0F);
-            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-            GlStateManager.enableRescaleNormal();
-            GlStateManager.enableLighting();
+        if (!itm.isEmpty()) {
+            RenderSystem.pushMatrix();
+            RenderSystem.translatef(0.0F, 0.0F, 32.0F);
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.enableRescaleNormal();
+            RenderSystem.enableLighting();
             short short1 = 240;
             short short2 = 240;
-            RenderHelper.enableGUIStandardItemLighting();
-            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, short1 / 1.0F, short2 / 1.0F);
-
-            itemRender.renderItemAndEffectIntoGUI(itm, x, y);
-            // ItemRendererOverlayIntoGUI(mc.fontRenderer, itm, x, y, txt, txt.length() - 2);
-            GlStateManager.popMatrix();
-            GlStateManager.disableRescaleNormal();
-            GlStateManager.disableLighting();
+            RenderHelper.setupGui3DDiffuseLighting();
+            try {
+                itemRender.renderItemAndEffectIntoGUI(itm, x, y);
+            } catch (Exception ignored) {
+            }
+            RenderSystem.popMatrix();
+            RenderSystem.disableRescaleNormal();
+            RenderSystem.disableLighting();
         }
-
     }
 
     @Nullable
@@ -141,11 +137,9 @@ public class OverlayRenderer extends Screen {
     private String getModName(Block block) {
         if (!block.equals(Blocks.AIR)) {
             String modId = block.getRegistryName().getNamespace();
-            if (modId != null) {
-                return ModList.get().getModContainerById(modId)
-                        .map(modContainer -> modContainer.getModInfo().getDisplayName())
-                        .orElse(StringUtils.capitalize(modId));
-            }
+            return ModList.get().getModContainerById(modId)
+                    .map(modContainer -> modContainer.getModInfo().getDisplayName())
+                    .orElse(StringUtils.capitalize(modId));
         }
         return null;
     }

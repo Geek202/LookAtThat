@@ -34,7 +34,7 @@ public class DefaultLATProvider implements IProvidesLATInfo {
      */
     @Override
     public INBT write() {
-        return new StringNBT(message);
+        return StringNBT.valueOf(message);
     }
 
     /**

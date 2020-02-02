@@ -11,7 +11,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -55,12 +55,7 @@ public class HudSignBlock extends Block {
 
     @Nonnull
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Nonnull
-    @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         switch (state.get(BlockStateProperties.HORIZONTAL_FACING)) {
             case NORTH:
@@ -88,10 +83,12 @@ public class HudSignBlock extends Block {
         return this.getDefaultState().with(BlockStateProperties.HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
 
+    @Nonnull
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+    @SuppressWarnings("deprecation")
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         if (!world.isRemote)
-            return true;
+            return ActionResultType.SUCCESS;
 
         TileEntity te = world.getTileEntity(pos);
         if (te != null) {
@@ -99,9 +96,9 @@ public class HudSignBlock extends Block {
             te.getCapability(CapabilityLATInfo.LAT_INFO_CAPABILITY).ifPresent(handler -> {
                 msg.set(handler.getInfo());
             });
-            Minecraft.getInstance().displayGuiScreen(new EditHudSignScreen(pos, world.dimension.getType(), "")); // @TODO Request message from server.
+            Minecraft.getInstance().displayGuiScreen(new EditHudSignScreen(pos, world.dimension.getType())); // @TODO Request message from server.
         }
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 }

@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+@SuppressWarnings("Convert2MethodRef")
 @Mod(LookAtThat.MODID)
 public class LookAtThat {
     public ItemGroup itemGroup = new ItemGroup("lookatthat") {

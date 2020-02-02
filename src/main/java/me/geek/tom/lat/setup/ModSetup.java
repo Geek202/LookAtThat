@@ -21,13 +21,13 @@ public class ModSetup {
 
     // OBJECT HOLDERS
     @ObjectHolder("testblock")
-    public static TestBlock TESTBLOCK;
+    private static TestBlock TESTBLOCK;
 
     @ObjectHolder("testblock")
     public static TileEntityType<TestTile> TESTBLOCK_TILE;
 
     @ObjectHolder("hud_sign")
-    public static HudSignBlock HUDSIGN;
+    private static HudSignBlock HUDSIGN;
 
     @ObjectHolder("hud_sign")
     public static BlockItem HUDSIGN_ITEM;

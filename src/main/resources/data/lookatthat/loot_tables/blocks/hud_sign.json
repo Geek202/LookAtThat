@@ -7,12 +7,7 @@
             "entries": [
                 {
                     "type": "minecraft:item",
-                    "name": "lat:hud_sign"
-                }
-            ],
-            "conditions": [
-                {
-                    "condition": "minecraft:survives_explosion"
+                    "name": "lookatthat:hud_sign"
                 }
             ]
         }

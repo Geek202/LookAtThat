@@ -12,13 +12,13 @@ public class EditHudSignScreen extends Screen {
     private TextFieldWidget textWiget;
     private BlockPos pos;
     private DimensionType type;
-    private String initialMessage;
+    // private String initialMessage;
 
-    public EditHudSignScreen(BlockPos pos, DimensionType type, String initialMessage) {
+    public EditHudSignScreen(BlockPos pos, DimensionType type/*, String initialMessage*/) {
         super(new StringTextComponent(""));
         this.pos = pos;
         this.type = type;
-        this.initialMessage = initialMessage;
+        // this.initialMessage = initialMessage;
     }
 
     @Override
