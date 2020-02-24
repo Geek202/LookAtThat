@@ -8,6 +8,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkDirection;
@@ -40,7 +41,13 @@ public class PacketRequestBlockInfo {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerWorld world = ctx.get().getSender().world.getServer().getWorld(type);
+
+            ServerWorld world = null;
+            for (ServerWorld w : ctx.get().getSender().world.getServer().getWorlds())
+                if (w.getDimension().getType().equals(this.type))
+                    world = w;
+            if (world == null)
+                return;
 
             BlockState state = world.getBlockState(pos);
             Item item = state.getBlock().getItem(world, pos, state).getItem();

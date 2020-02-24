@@ -37,7 +37,12 @@ public class PacketUpdateSignText {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerWorld world = ctx.get().getSender().world.getServer().getWorld(this.dimension);
+            ServerWorld world = null;
+            for (ServerWorld w : ctx.get().getSender().world.getServer().getWorlds())
+                if (w.getDimension().getType().equals(this.dimension))
+                    world = w;
+            if (world == null)
+                return;
             TileEntity te = world.getTileEntity(pos);
 
             if (te == null)
