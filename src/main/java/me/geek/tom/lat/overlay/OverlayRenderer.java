@@ -1,8 +1,7 @@
 package me.geek.tom.lat.overlay;
 
-import com.mojang.blaze3d.platform.GLX;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import me.geek.tom.lat.Config;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -80,6 +79,8 @@ public class OverlayRenderer extends Screen {
                 width = Math.max(width, mc.fontRenderer.getStringWidth(s));
         width += 35;
 
+        preconfigureRender(width);
+
         fill(5, 5, width, this.hasAdditionalData ? 32 + 10 * this.additionalData.length : 32, 0x88000000);
 
         if (!this.useBlock)
@@ -116,6 +117,16 @@ public class OverlayRenderer extends Screen {
             RenderSystem.popMatrix();
             RenderSystem.disableRescaleNormal();
             RenderSystem.disableLighting();
+        }
+    }
+
+    private void preconfigureRender(int width) {
+        if (Config.CENTER_HUD.get()) {
+            int screenWidth = Minecraft.getInstance().getMainWindow().getScaledWidth();
+            int screenCenterPosition = ((screenWidth - 10) / 2);
+            int translateToCenter = screenCenterPosition - (width / 2);
+
+            RenderSystem.translatef((float) translateToCenter, 0f, 0f);
         }
     }
 
