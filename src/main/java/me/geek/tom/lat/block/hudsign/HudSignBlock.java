@@ -1,6 +1,7 @@
 package me.geek.tom.lat.block.hudsign;
 
 import me.geek.tom.lat.modapi.CapabilityLATInfo;
+import me.geek.tom.lat.setup.ClientProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -19,7 +20,9 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -90,14 +93,7 @@ public class HudSignBlock extends Block {
         if (!world.isRemote)
             return ActionResultType.SUCCESS;
 
-        TileEntity te = world.getTileEntity(pos);
-        if (te != null) {
-            AtomicReference<String> msg = new AtomicReference<>();
-            te.getCapability(CapabilityLATInfo.LAT_INFO_CAPABILITY).ifPresent(handler -> {
-                msg.set(handler.getInfo());
-            });
-            Minecraft.getInstance().displayGuiScreen(new EditHudSignScreen(pos, world.dimension.getType())); // @TODO Request message from server.
-        }
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ClientProxy.openHudSignGui(world, pos));
 
         return ActionResultType.SUCCESS;
     }

@@ -1,8 +1,6 @@
 package me.geek.tom.lat.networking;
 
 import me.geek.tom.lat.modapi.CapabilityLATInfo;
-import me.geek.tom.lat.modapi.IProvidesLATInfo;
-import net.minecraft.block.BlockState;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +22,7 @@ public class PacketUpdateSignText {
     }
 
     public PacketUpdateSignText(PacketBuffer buf) {
-        this.message = buf.readString();
+        this.message = buf.readString(32767);
         this.pos = buf.readBlockPos();
         this.dimension = DimensionType.getById(buf.readInt());
     }
@@ -41,7 +39,7 @@ public class PacketUpdateSignText {
             TileEntity te = world.getTileEntity(pos);
 
             if (te == null)
-                throw new RuntimeException("No tileentity at the position recieved! This indicates someone is messing with packets!");
+                throw new RuntimeException("No tileentity at the position recieved! This suggests that someone is messing with packets!");
 
             te.getCapability(CapabilityLATInfo.LAT_INFO_CAPABILITY).ifPresent((hanlder) -> {
                 hanlder.setMessage(this.message);
