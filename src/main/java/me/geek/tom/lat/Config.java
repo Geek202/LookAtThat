@@ -18,7 +18,7 @@ public class Config {
 
         CLIENT_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
 
-        CENTER_HUD = CLIENT_BUILDER.comment("Whether or not the HUD will be centered on to the left on the screen")
+        CENTER_HUD = CLIENT_BUILDER.comment("Whether or not the HUD will be centered or to the left on the screen")
                 .define("centerHud", false);
 
         CLIENT_BUILDER.pop();
