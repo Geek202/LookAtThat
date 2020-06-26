@@ -1,12 +1,10 @@
 package me.geek.tom.lat.block.hudsign;
 
-import me.geek.tom.lat.modapi.CapabilityLATInfo;
 import me.geek.tom.lat.setup.ClientProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
@@ -26,7 +24,6 @@ import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class HudSignBlock extends Block {
     private static final VoxelShape NORTH_SIGN = Block.makeCuboidShape(1d, 4d, 16d, 15d, 12d, 15d);
@@ -40,7 +37,7 @@ public class HudSignBlock extends Block {
                 .sound(SoundType.METAL)
                 .harvestTool(ToolType.PICKAXE)
                 .hardnessAndResistance(5.0f, 5.0f)
-                .lightValue(14)
+                .func_235838_a_(v -> 14) // Light level
         );
         setRegistryName("hud_sign");
     }

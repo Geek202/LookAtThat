@@ -1,5 +1,6 @@
 package me.geek.tom.lat.setup;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import me.geek.tom.lat.networking.Networking;
 import me.geek.tom.lat.networking.PacketRequestBlockInfo;
 import me.geek.tom.lat.overlay.OverlayRenderer;
@@ -35,7 +36,7 @@ public class ClientEventHandler {
     public static void render(RenderGameOverlayEvent.Post event) {
         switch (event.getType()) {
             case HOTBAR:
-                getRenderer().render();
+                getRenderer().render(new MatrixStack());
                 break;
             default:
                 break;
@@ -63,7 +64,7 @@ public class ClientEventHandler {
                 if (Minecraft.getInstance().player.getServerBrand().toLowerCase().equals("forge")) {
                     Networking.INSTANCE.sendToServer(
                             new PacketRequestBlockInfo(
-                                    Minecraft.getInstance().player.dimension,
+                                    Minecraft.getInstance().world.func_234923_W_(),
                                     ((BlockRayTraceResult) result).getPos()
                             )
                     );

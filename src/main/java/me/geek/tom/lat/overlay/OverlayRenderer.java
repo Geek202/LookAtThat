@@ -1,5 +1,6 @@
 package me.geek.tom.lat.overlay;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.geek.tom.lat.Config;
 import net.minecraft.block.Block;
@@ -8,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -46,7 +48,7 @@ public class OverlayRenderer extends Screen {
         this.additionalData = additionalData;
     }
 
-    public void render() {
+    public void render(MatrixStack stack) {
 
         if (this.currentItem.equals(Items.AIR) && !this.useBlock)
             return;
@@ -60,7 +62,7 @@ public class OverlayRenderer extends Screen {
         ItemStack itemStack = new ItemStack(currentItem, 1);
 
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
-        String displayName = this.useBlock ? currentBlock.getNameTextComponent().getString() : itemStack.getDisplayName().getString();
+        String displayName = this.useBlock ? I18n.format(currentBlock.getTranslationKey()) : itemStack.getDisplayName().getString();
         String modName;
 
         if (!this.useBlock) {
@@ -81,16 +83,16 @@ public class OverlayRenderer extends Screen {
 
         preconfigureRender(width);
 
-        fill(5, 5, width, this.hasAdditionalData ? 32 + 10 * this.additionalData.length : 32, 0x88000000);
+        func_238467_a_(stack,5, 5, width, this.hasAdditionalData ? 32 + 10 * this.additionalData.length : 32, 0x88000000);
 
         if (!this.useBlock)
             this.renderItemStack(itemStack, 10, 10);
-        mc.fontRenderer.drawStringWithShadow(displayName, 32, 10, 0xFFFFFF);
-        mc.fontRenderer.drawStringWithShadow(modName, 32, 20, 0x0055FF);
+        mc.fontRenderer.func_238421_b_(stack, displayName, 32, 10, 0xFFFFFF);
+        mc.fontRenderer.func_238421_b_(stack, modName, 32, 20, 0x0055FF);
         if (this.hasAdditionalData) {
             int i = 0;
             for (String s : this.additionalData) {
-                mc.fontRenderer.drawStringWithShadow(s, 32 + i * 10, 30, 0x888800);
+                mc.fontRenderer.func_238421_b_(stack, s, 32 + i * 10, 30, 0x888800);
                 i++;
             }
         }

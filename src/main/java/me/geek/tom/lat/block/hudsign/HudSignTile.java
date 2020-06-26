@@ -4,6 +4,7 @@ import me.geek.tom.lat.modapi.CapabilityLATInfo;
 import me.geek.tom.lat.modapi.DefaultLATProvider;
 import me.geek.tom.lat.modapi.IProvidesLATInfo;
 import me.geek.tom.lat.setup.ModSetup;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.StringNBT;
@@ -28,8 +29,8 @@ public class HudSignTile extends TileEntity {
     }
 
     @Override
-    public void read(CompoundNBT nbt) {
-        super.read(nbt);
+    public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+        super.func_230337_a_(state, nbt);
         latInfoCapability.ifPresent(handler -> {
             INBT message = nbt.get("message");
             if (message != null) {

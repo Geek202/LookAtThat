@@ -3,6 +3,7 @@ package me.geek.tom.lat.testingstuff;
 import me.geek.tom.lat.modapi.CapabilityLATInfo;
 import me.geek.tom.lat.modapi.IProvidesLATInfo;
 import me.geek.tom.lat.modapi.DefaultLATProvider;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -28,8 +29,8 @@ public class TestTile extends TileEntity {
     }
 
     @Override
-    public void read(CompoundNBT nbt) {
-        super.read(nbt);
+    public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+        super.func_230337_a_(state, nbt);
         latInfoCapability.ifPresent(handler -> handler.read(nbt.get("message")));
     }
 

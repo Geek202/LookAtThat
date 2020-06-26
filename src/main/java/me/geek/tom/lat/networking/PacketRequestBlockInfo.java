@@ -1,41 +1,44 @@
 package me.geek.tom.lat.networking;
 
 import me.geek.tom.lat.modapi.CapabilityLATInfo;
-import net.minecraft.block.*;
+import net.minecraft.block.AbstractBannerBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 @SuppressWarnings("deprecation")
 public class PacketRequestBlockInfo {
-    private final DimensionType dim;
+    private final RegistryKey<World> dim;
     private final BlockPos pos;
 
     public PacketRequestBlockInfo(PacketBuffer buf) {
-        dim = DimensionType.getById(buf.readInt());
+        dim = RegistryKey.func_240903_a_(Registry.field_239699_ae_, buf.readResourceLocation());
         pos = buf.readBlockPos();
     }
 
-    public PacketRequestBlockInfo(DimensionType type, BlockPos pos) {
+    public PacketRequestBlockInfo(RegistryKey<World> type, BlockPos pos) {
         this.dim = type;
         this.pos = pos;
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeInt(dim.getId());
+        buf.writeResourceLocation(dim.func_240901_a_());
         buf.writeBlockPos(pos);
     }
 
@@ -50,10 +53,6 @@ public class PacketRequestBlockInfo {
 
             if (block instanceof AbstractBannerBlock)
                 item = Items.WHITE_BANNER;
-            else if (block instanceof AttachedStemBlock)
-                item = getGrownFruit((AttachedStemBlock) block);
-            else if (block instanceof StemBlock)
-                item = getSeedItem((StemBlock) block);
             else
                 item = block.getItem(world, pos, state).getItem();
 
@@ -107,7 +106,8 @@ public class PacketRequestBlockInfo {
         ctx.get().setPacketHandled(true);
     }
 
-    private Item getGrownFruit(AttachedStemBlock block) {
+    // Don't need anymore, forge added a patch for the issue this fixes.
+    /*private Item getGrownFruit(AttachedStemBlock block) {
         Field field;
         try {
             field = AttachedStemBlock.class.getDeclaredField("grownFruit");
@@ -136,5 +136,5 @@ public class PacketRequestBlockInfo {
         } else {
             return block.getCrop() == Blocks.MELON ? Items.MELON_SEEDS : null;
         }
-    }
+    }*/
 }

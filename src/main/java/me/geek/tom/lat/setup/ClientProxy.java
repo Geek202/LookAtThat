@@ -22,7 +22,7 @@ public class ClientProxy implements IProxy {
             te.getCapability(CapabilityLATInfo.LAT_INFO_CAPABILITY).ifPresent(handler -> {
                 msg.set(handler.getInfo());
             });
-            Minecraft.getInstance().displayGuiScreen(new EditHudSignScreen(pos, world.dimension.getType())); // @TODO Request message from server.
+            Minecraft.getInstance().displayGuiScreen(new EditHudSignScreen(pos, world.func_234923_W_())); // @TODO Request message from server.
         }
     }
 }
