@@ -1,10 +1,66 @@
 package me.geek.tom.lat.blockinfo;
 
+import me.geek.tom.lat.blockinfo.api.BlockInformation;
+import me.geek.tom.lat.blockinfo.api.IBlockInfoSupplier;
+import me.geek.tom.lat.blockinfo.impl.BasicInformationSupplier;
+import me.geek.tom.lat.blockinfo.impl.CapabilityInformationSupplier;
+import me.geek.tom.lat.blockinfo.impl.ContainerInformationSupplier;
+import me.geek.tom.lat.event.RegisterInfoSuppliersEvent;
+import net.minecraft.block.BlockState;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ModList;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+
 public class InformationGatherer {
 
-    public static BlockInformation gatherInformation() {
+    private static final List<IBlockInfoSupplier> blockInfoSuppliers = new ArrayList<>();
 
-        return new BlockInformation();
+    private static void registerBlockInfoSupplier(IBlockInfoSupplier supplier) {
+        if (!blockInfoSuppliers.contains(supplier))
+            blockInfoSuppliers.add(supplier);
+    }
+
+    public static void fireRegisterEvent() {
+        blockInfoSuppliers.add(new BasicInformationSupplier());
+        blockInfoSuppliers.add(new ContainerInformationSupplier());
+        blockInfoSuppliers.add(new CapabilityInformationSupplier());
+
+        MinecraftForge.EVENT_BUS.post(new RegisterInfoSuppliersEvent(InformationGatherer::registerBlockInfoSupplier));
+    }
+
+    public static BlockInformation gatherInformation(World world, BlockPos pos) {
+        BlockState state = world.getBlockState(pos);
+
+        BlockInformation info = new BlockInformation();
+
+        for (IBlockInfoSupplier supplier : blockInfoSuppliers) {
+            if (supplier.shouldHandle(pos, state, world))
+                supplier.addInfo(info::addInformation, pos, state, world);
+        }
+
+        return info;
+    }
+
+    @Nullable
+    public static String getModName(ItemStack itemStack) {
+        if (!itemStack.isEmpty()) {
+            Item item = itemStack.getItem();
+            String modId = item.getCreatorModId(itemStack);
+            if (modId != null) {
+                return ModList.get().getModContainerById(modId)
+                        .map(modContainer -> modContainer.getModInfo().getDisplayName())
+                        .orElse(StringUtils.capitalize(modId));
+            }
+        }
+        return null;
     }
 
 }

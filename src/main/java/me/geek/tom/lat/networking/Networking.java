@@ -18,10 +18,10 @@ public class Networking {
 
         INSTANCE.registerMessage(
                 nextID(),
-                PacketBlockType.class,
-                PacketBlockType::toBytes,
-                PacketBlockType::new,
-                PacketBlockType::handle
+                PacketBlockInfo.class,
+                PacketBlockInfo::toBytes,
+                PacketBlockInfo::new,
+                PacketBlockInfo::handle
         );
 
         INSTANCE.registerMessage(
@@ -30,14 +30,6 @@ public class Networking {
                 PacketRequestBlockInfo::toBytes,
                 PacketRequestBlockInfo::new,
                 PacketRequestBlockInfo::handle
-        );
-
-        INSTANCE.registerMessage(
-                nextID(),
-                PacketAdditionalData.class,
-                PacketAdditionalData::toBytes,
-                PacketAdditionalData::new,
-                PacketAdditionalData::handle
         );
 
         INSTANCE.registerMessage(

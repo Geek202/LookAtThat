@@ -9,19 +9,12 @@ import net.minecraft.world.World;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-public class ClientProxy implements IProxy {
-    @Override
-    public void init() {
-
-    }
-
+public class ClientProxy {
     public static void openHudSignGui(World world, BlockPos pos) {
         TileEntity te = world.getTileEntity(pos);
         if (te != null) {
             AtomicReference<String> msg = new AtomicReference<>();
-            te.getCapability(CapabilityLATInfo.LAT_INFO_CAPABILITY).ifPresent(handler -> {
-                msg.set(handler.getInfo());
-            });
+            te.getCapability(CapabilityLATInfo.LAT_INFO_CAPABILITY).ifPresent(handler -> msg.set(handler.getInfo()));
             Minecraft.getInstance().displayGuiScreen(new EditHudSignScreen(pos, world.func_234923_W_())); // @TODO Request message from server.
         }
     }

@@ -14,13 +14,11 @@ public class EditHudSignScreen extends Screen {
     private TextFieldWidget textWiget;
     private BlockPos pos;
     private RegistryKey<World> type;
-    // private String initialMessage;
 
     public EditHudSignScreen(BlockPos pos, RegistryKey<World> type/*, String initialMessage*/) {
         super(new StringTextComponent(""));
         this.pos = pos;
         this.type = type;
-        // this.initialMessage = initialMessage;
     }
 
     @Override
@@ -31,8 +29,6 @@ public class EditHudSignScreen extends Screen {
         this.textWiget = new TextFieldWidget(this.field_230712_o_,
                 50, 50, 150, 25, new StringTextComponent("Message"));
 
-        // this.textWiget.setCanLoseFocus(false);
-        // this.textWiget.changeFocus(true);
         this.textWiget.setTextColor(-1);
         this.textWiget.setDisabledTextColour(-1);
         this.textWiget.setEnableBackgroundDrawing(true);

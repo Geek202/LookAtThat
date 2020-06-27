@@ -1,11 +1,14 @@
 package me.geek.tom.lat.setup;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import me.geek.tom.lat.blockinfo.api.BlockInfoLine;
+import me.geek.tom.lat.blockinfo.api.BlockInformation;
 import me.geek.tom.lat.networking.Networking;
 import me.geek.tom.lat.networking.PacketRequestBlockInfo;
 import me.geek.tom.lat.overlay.OverlayRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -34,13 +37,8 @@ public class ClientEventHandler {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void render(RenderGameOverlayEvent.Post event) {
-        switch (event.getType()) {
-            case HOTBAR:
-                getRenderer().render(new MatrixStack());
-                break;
-            default:
-                break;
-        }
+        if (event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR)
+            getRenderer().render(new MatrixStack());
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -57,7 +55,6 @@ public class ClientEventHandler {
             if (result.getType().equals(RayTraceResult.Type.BLOCK)) {
                 BlockRayTraceResult re = (BlockRayTraceResult) result;
                 if (!re.getPos().equals(lastPos)) {
-                    getRenderer().setHasAdditionalData(false);
                     lastPos = re.getPos();
                 }
 
@@ -68,9 +65,14 @@ public class ClientEventHandler {
                                     ((BlockRayTraceResult) result).getPos()
                             )
                     );
-
+                    BlockState state = Minecraft.getInstance().world.getBlockState(((BlockRayTraceResult) result).getPos());
+                    Item item = state.getBlock().getItem(Minecraft.getInstance().world, ((BlockRayTraceResult) result).getPos(), state).getItem();
+                    if (item.equals(getRenderer().getCurrentItem()))
+                        return;
+                    getRenderer().setItem(item);
+                    getRenderer().currentBlockInfo = new BlockInformation();
+                    //getRenderer().currentBlockInfo.addInformation(new BlockInfoLine("Waiting for server...", 0xFF0000));
                 } else {
-                    getRenderer().setHasAdditionalData(false);
                     BlockState state = Minecraft.getInstance().world.getBlockState(((BlockRayTraceResult) result).getPos());
                     getRenderer().setItem(state.getBlock().getItem(Minecraft.getInstance().world, ((BlockRayTraceResult) result).getPos(), state).getItem());
                 }

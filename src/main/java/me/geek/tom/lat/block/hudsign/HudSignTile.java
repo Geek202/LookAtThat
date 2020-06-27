@@ -21,7 +21,7 @@ public class HudSignTile extends TileEntity {
     private LazyOptional<IProvidesLATInfo> latInfoCapability = LazyOptional.of(this::createLatInfo);
 
     public HudSignTile() {
-        super(ModSetup.HUDSIGN_TILE);
+        super(ModSetup.HUDSIGN_TILE.get());
     }
 
     private IProvidesLATInfo createLatInfo() {

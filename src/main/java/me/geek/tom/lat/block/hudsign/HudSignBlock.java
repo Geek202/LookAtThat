@@ -39,7 +39,6 @@ public class HudSignBlock extends Block {
                 .hardnessAndResistance(5.0f, 5.0f)
                 .func_235838_a_(v -> 14) // Light level
         );
-        setRegistryName("hud_sign");
     }
 
     @Override

@@ -3,13 +3,14 @@ package me.geek.tom.lat.overlay;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.geek.tom.lat.Config;
+import me.geek.tom.lat.blockinfo.api.BlockInfoLine;
+import me.geek.tom.lat.blockinfo.api.BlockInformation;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -18,16 +19,15 @@ import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class OverlayRenderer extends Screen {
 
     // private static final ResourceLocation BAR_TEXTURE = new ResourceLocation(LookAtThat.MODID, "textures/overlay/bar");
 
     private Item currentItem = Items.AIR;
-    private Block currentBlock = Blocks.AIR;
-    private boolean useBlock;
-    private boolean hasAdditionalData = false;
-    private String[] additionalData = {};
+
+    public BlockInformation currentBlockInfo;
 
     public OverlayRenderer() {
         super(new StringTextComponent(""));
@@ -35,66 +35,46 @@ public class OverlayRenderer extends Screen {
 
     public void setItem(Item item) {
         currentItem = item;
-        useBlock = false;
-    }
-    public void setBlock(Block block) {
-        currentBlock = block;
-        useBlock = true;
-    }
-    public void setHasAdditionalData(boolean hasAdditionalData) {
-        this.hasAdditionalData = hasAdditionalData;
-    }
-    public void setAdditionalData(String[] additionalData) {
-        this.additionalData = additionalData;
     }
 
+    public Item getCurrentItem() {
+        return currentItem;
+    }
+
+    @SuppressWarnings("deprecation")
     public void render(MatrixStack stack) {
-
-        if (this.currentItem.equals(Items.AIR) && !this.useBlock)
-            return;
-
-        if (this.currentBlock.equals(Blocks.AIR) && this.useBlock)
-            return;
-
         RenderSystem.pushMatrix();
 
         Minecraft mc = Minecraft.getInstance();
         ItemStack itemStack = new ItemStack(currentItem, 1);
 
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
-        String displayName = this.useBlock ? I18n.format(currentBlock.getTranslationKey()) : itemStack.getDisplayName().getString();
-        String modName;
 
-        if (!this.useBlock) {
-            modName = getModName(itemStack);
-        } else {
-            modName = getModName(currentBlock);
-        }
+        int width = 0;
 
-        int width = Math.max(
-                mc.fontRenderer.getStringWidth(displayName),
-                mc.fontRenderer.getStringWidth(modName)
-        );
+        List<BlockInfoLine> information = currentBlockInfo.getInformation();
+        for (BlockInfoLine ln : information)
+            width = Math.max(
+                    width,
+                    mc.fontRenderer.getStringWidth(ln.getLine())
+            );
 
-        if (this.hasAdditionalData)
-            for (String s : this.additionalData)
-                width = Math.max(width, mc.fontRenderer.getStringWidth(s));
         width += 35;
+
+        int height = 12 + 10 * information.size();
+        if (information.size() == 1)
+            height += 10;
 
         preconfigureRender(width);
 
-        func_238467_a_(stack,5, 5, width, this.hasAdditionalData ? 32 + 10 * this.additionalData.length : 32, 0x88000000);
+        func_238467_a_(stack,5, 5, width, height, 0x88000000);
 
-        if (!this.useBlock)
-            this.renderItemStack(itemStack, 10, 10);
-        mc.fontRenderer.func_238421_b_(stack, displayName, 32, 10, 0xFFFFFF);
-        mc.fontRenderer.func_238421_b_(stack, modName, 32, 20, 0x0055FF);
-        if (this.hasAdditionalData) {
-            int i = 0;
-            for (String s : this.additionalData) {
-                mc.fontRenderer.func_238421_b_(stack, s, 32 + i * 10, 30, 0x888800);
-                i++;
-            }
+        this.renderItemStack(itemStack, 10, 10);
+
+        int i = 0;
+        for (BlockInfoLine line : information) {
+            mc.fontRenderer.func_238421_b_(stack, line.getLine(), 30, 10 + i * 10, line.getColour());
+            i++;
         }
         RenderSystem.popMatrix();
     }
@@ -130,20 +110,6 @@ public class OverlayRenderer extends Screen {
 
             RenderSystem.translatef((float) translateToCenter, 0f, 0f);
         }
-    }
-
-    @Nullable
-    private String getModName(ItemStack itemStack) {
-        if (!itemStack.isEmpty()) {
-            Item item = itemStack.getItem();
-            String modId = item.getCreatorModId(itemStack);
-            if (modId != null) {
-                return ModList.get().getModContainerById(modId)
-                        .map(modContainer -> modContainer.getModInfo().getDisplayName())
-                        .orElse(StringUtils.capitalize(modId));
-            }
-        }
-        return null;
     }
 
     @Nullable
