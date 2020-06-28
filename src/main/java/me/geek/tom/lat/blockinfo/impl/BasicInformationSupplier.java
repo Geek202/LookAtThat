@@ -20,7 +20,7 @@ public class BasicInformationSupplier implements IBlockInfoSupplier {
         String modName = getModName(stack);
 
         adder.accept(new BlockInfoLine(displayName, 0xFFFFFF));
-        adder.accept(new BlockInfoLine(modName, 0x0055FF));
+        adder.accept(new BlockInfoLine(modName, 0x0088FF));
     }
 
     @Override

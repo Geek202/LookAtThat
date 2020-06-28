@@ -52,6 +52,8 @@ public class ClientEventHandler {
             lastYaw = yaw;
 
             RayTraceResult result = Minecraft.getInstance().objectMouseOver;
+            if (result == null) return;
+
             if (result.getType().equals(RayTraceResult.Type.BLOCK)) {
                 BlockRayTraceResult re = (BlockRayTraceResult) result;
                 if (!re.getPos().equals(lastPos)) {
@@ -75,9 +77,11 @@ public class ClientEventHandler {
                 } else {
                     BlockState state = Minecraft.getInstance().world.getBlockState(((BlockRayTraceResult) result).getPos());
                     getRenderer().setItem(state.getBlock().getItem(Minecraft.getInstance().world, ((BlockRayTraceResult) result).getPos(), state).getItem());
+                    getRenderer().currentBlockInfo = new BlockInformation();
                 }
             } else if (result.getType().equals(RayTraceResult.Type.MISS)) {
                 getRenderer().setItem(Items.AIR);
+                getRenderer().currentBlockInfo = new BlockInformation();
             }
         }
     }

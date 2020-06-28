@@ -26,8 +26,11 @@ public class EditHudSignScreen extends Screen {
         super.func_231160_c_();
         this.field_230706_i_.keyboardListener.enableRepeatEvents(true);
 
+        int xpos = (this.field_230708_k_ / 2) - 75;
+        int ypos = (this.field_230709_l_ / 2) - 12;
+
         this.textWiget = new TextFieldWidget(this.field_230712_o_,
-                50, 50, 150, 25, new StringTextComponent("Message"));
+                xpos, ypos, 150, 25, new StringTextComponent("Message"));
 
         this.textWiget.setTextColor(-1);
         this.textWiget.setDisabledTextColour(-1);
