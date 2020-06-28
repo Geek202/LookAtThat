@@ -23,9 +23,8 @@ public class PacketBlockInfo {
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ClientEventHandler.getRenderer().currentBlockInfo = info;
-        });
+        ctx.get().enqueueWork(() ->
+                ClientEventHandler.getRenderer().currentBlockInfo = info);
         ctx.get().setPacketHandled(true);
     }
 }

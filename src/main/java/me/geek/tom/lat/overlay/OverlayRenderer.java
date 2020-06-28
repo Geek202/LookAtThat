@@ -43,6 +43,8 @@ public class OverlayRenderer extends Screen {
 
     @SuppressWarnings("deprecation")
     public void render(MatrixStack stack) {
+        if (currentBlockInfo == null) return;
+
         RenderSystem.pushMatrix();
 
         Minecraft mc = Minecraft.getInstance();
@@ -79,6 +81,7 @@ public class OverlayRenderer extends Screen {
         RenderSystem.popMatrix();
     }
 
+    @SuppressWarnings("deprecation")
     private void renderItemStack(ItemStack itm, int x, int y) {
         ItemRenderer itemRender = Minecraft.getInstance().getItemRenderer();
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0f);
@@ -102,6 +105,7 @@ public class OverlayRenderer extends Screen {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void preconfigureRender(int width) {
         if (Config.CENTER_HUD.get()) {
             int screenWidth = Minecraft.getInstance().getMainWindow().getScaledWidth();
