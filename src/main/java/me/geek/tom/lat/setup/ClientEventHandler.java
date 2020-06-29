@@ -1,7 +1,6 @@
 package me.geek.tom.lat.setup;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import me.geek.tom.lat.blockinfo.api.BlockInfoLine;
 import me.geek.tom.lat.blockinfo.api.BlockInformation;
 import me.geek.tom.lat.networking.Networking;
 import me.geek.tom.lat.networking.PacketRequestBlockInfo;
@@ -41,6 +40,7 @@ public class ClientEventHandler {
             getRenderer().render(new MatrixStack());
     }
 
+    @SuppressWarnings("ConstantConditions")
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void cameraUpdate(EntityViewRenderEvent.CameraSetup event) {
@@ -72,16 +72,16 @@ public class ClientEventHandler {
                     if (item.equals(getRenderer().getCurrentItem()))
                         return;
                     getRenderer().setItem(item);
-                    getRenderer().currentBlockInfo = new BlockInformation();
+                    getRenderer().currentBlockInfo = new BlockInformation(false);
                     //getRenderer().currentBlockInfo.addInformation(new BlockInfoLine("Waiting for server...", 0xFF0000));
                 } else {
                     BlockState state = Minecraft.getInstance().world.getBlockState(((BlockRayTraceResult) result).getPos());
                     getRenderer().setItem(state.getBlock().getItem(Minecraft.getInstance().world, ((BlockRayTraceResult) result).getPos(), state).getItem());
-                    getRenderer().currentBlockInfo = new BlockInformation();
+                    getRenderer().currentBlockInfo = new BlockInformation(false);
                 }
             } else if (result.getType().equals(RayTraceResult.Type.MISS)) {
                 getRenderer().setItem(Items.AIR);
-                getRenderer().currentBlockInfo = new BlockInformation();
+                getRenderer().currentBlockInfo = new BlockInformation(false);
             }
         }
     }

@@ -7,11 +7,13 @@ import me.geek.tom.lat.blockinfo.impl.CapabilityInformationSupplier;
 import me.geek.tom.lat.blockinfo.impl.ContainerInformationSupplier;
 import me.geek.tom.lat.event.RegisterInfoSuppliersEvent;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
 
@@ -36,10 +38,22 @@ public class InformationGatherer {
         MinecraftForge.EVENT_BUS.post(new RegisterInfoSuppliersEvent(InformationGatherer::registerBlockInfoSupplier));
     }
 
-    public static BlockInformation gatherInformation(World world, BlockPos pos) {
+    public static BlockInformation gatherInformation(World world, BlockPos pos, ServerPlayerEntity sender) {
         BlockState state = world.getBlockState(pos);
 
-        BlockInformation info = new BlockInformation();
+        //boolean canHarvest = state.canHarvestBlock(world, pos, sender);
+        boolean canHarvest;
+
+        ItemStack stack = sender.getHeldItemMainhand();
+        ToolType tool = state.getHarvestTool();
+        if (stack.isEmpty() || tool == null) {
+            canHarvest = state.getBlockHardness(world, pos) >= 0;
+        } else {
+            int toolLevel = stack.getItem().getHarvestLevel(stack, tool, sender, state);
+            canHarvest = toolLevel >= state.getHarvestLevel();
+        }
+
+        BlockInformation info = new BlockInformation(canHarvest);
 
         for (IBlockInfoSupplier supplier : blockInfoSuppliers) {
             if (supplier.shouldHandle(pos, state, world))

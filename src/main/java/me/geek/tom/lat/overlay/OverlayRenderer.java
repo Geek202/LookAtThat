@@ -9,8 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -71,6 +70,11 @@ public class OverlayRenderer extends Screen {
 
         func_238467_a_(stack,5, 5, width, height, 0x88000000);
 
+        boolean canBreak = currentBlockInfo.canHarvest();
+        if (!information.isEmpty()) {
+            renderBox(stack, 5, 5, width-5, height-5, canBreak ? 0xFF00FF00 : 0xFFFF0000);
+        }
+
         this.renderItemStack(itemStack, 10, 10);
 
         int i = 0;
@@ -79,6 +83,40 @@ public class OverlayRenderer extends Screen {
             i++;
         }
         RenderSystem.popMatrix();
+    }
+
+    private void renderBox(MatrixStack stack, int x, int y, int width, int height, int col) {
+        /*BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
+        RenderSystem.enableBlend();
+        RenderSystem.disableTexture();
+        RenderSystem.defaultBlendFunc();
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);*/
+
+        line(stack, x, y, width, false, col);
+        line(stack, x, y+height-1, width, false, col);
+        line(stack, x, y, height, true, col);
+        line(stack, x+width-1, y, height, true, col);
+
+        /*bufferbuilder.finishDrawing();
+        WorldVertexBufferUploader.draw(bufferbuilder);
+        RenderSystem.enableTexture();
+        RenderSystem.disableBlend();*/
+    }
+
+    private void line(MatrixStack stack, int x, int y, int length, boolean vertical, int col) {
+        if (vertical) {
+            /*builder.pos((x+1),      (y),          0.0D).color(red, green, blue, alpha).endVertex();
+            builder.pos((x+1),      (y + length), 0.0D).color(red, green, blue, alpha).endVertex();
+            builder.pos((x),        (y + length), 0.0D).color(red, green, blue, alpha).endVertex();
+            builder.pos((x),        (y),          0.0D).color(red, green, blue, alpha).endVertex();*/
+            func_238467_a_(stack, x, y, x+1, y+length, col);
+        } else {
+            /*builder.pos((x+length), (y),          0.0D).color(red, green, blue, alpha).endVertex();
+            builder.pos((x+length), (y+1),        0.0D).color(red, green, blue, alpha).endVertex();
+            builder.pos((x),        (y+1),        0.0D).color(red, green, blue, alpha).endVertex();
+            builder.pos((x),        (y),          0.0D).color(red, green, blue, alpha).endVertex();*/
+            func_238467_a_(stack, x, y, x+length, y+1, col);
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -116,6 +154,7 @@ public class OverlayRenderer extends Screen {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Nullable
     private String getModName(Block block) {
         if (!block.equals(Blocks.AIR)) {

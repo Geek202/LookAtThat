@@ -37,7 +37,7 @@ public class PacketRequestBlockInfo {
         ctx.get().enqueueWork(() -> {
             ServerWorld world = ctx.get().getSender().world.getServer().getWorld(dim);
 
-            BlockInformation info = InformationGatherer.gatherInformation(world, pos);
+            BlockInformation info = InformationGatherer.gatherInformation(world, pos, ctx.get().getSender());
             Networking.INSTANCE.sendTo(
                     new PacketBlockInfo(info),
                     ctx.get().getSender().connection.netManager,
