@@ -10,10 +10,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class EditHudSignScreen extends Screen {
     private TextFieldWidget textWiget;
-    private BlockPos pos;
-    private RegistryKey<World> type;
+    private final BlockPos pos;
+    private final RegistryKey<World> type;
 
     public EditHudSignScreen(BlockPos pos, RegistryKey<World> type/*, String initialMessage*/) {
         super(new StringTextComponent(""));
@@ -22,14 +25,14 @@ public class EditHudSignScreen extends Screen {
     }
 
     @Override
-    protected void func_231160_c_() { // init
-        super.func_231160_c_();
-        this.field_230706_i_.keyboardListener.enableRepeatEvents(true);
+    protected void init() {
+        super.init();
+        this.minecraft.keyboardListener.enableRepeatEvents(true);
 
-        int xpos = (this.field_230708_k_ / 2) - 75;
-        int ypos = (this.field_230709_l_ / 2) - 12;
+        int xpos = (this.width / 2) - 75;
+        int ypos = (this.height / 2) - 12;
 
-        this.textWiget = new TextFieldWidget(this.field_230712_o_,
+        this.textWiget = new TextFieldWidget(this.font,
                 xpos, ypos, 150, 25, new StringTextComponent("Message"));
 
         this.textWiget.setTextColor(-1);
@@ -41,41 +44,41 @@ public class EditHudSignScreen extends Screen {
 
         // this.textWiget.setText(initialMessage); @TODO  Request message from server.
 
-        this.field_230705_e_.add(this.textWiget);
+        this.children.add(this.textWiget);
     }
 
     @Override
-    public void func_231164_f_() { // remove
-        super.func_231164_f_();
+    public void onClose() {
+        super.onClose();
 
-        this.field_230706_i_.keyboardListener.enableRepeatEvents(false);
+        this.minecraft.keyboardListener.enableRepeatEvents(false);
     }
 
     @Override
-    public boolean func_231046_a_(int key, int p_keyPressed_2_, int p_keyPressed_3_) {
+    public boolean keyPressed(int key, int p_keyPressed_2_, int p_keyPressed_3_) {
         if (key == 256) {
-            this.field_230706_i_.player.closeScreen();
+            this.minecraft.player.closeScreen();
         }
 
-        return super.func_231046_a_(key, p_keyPressed_2_, p_keyPressed_3_);
+        return super.keyPressed(key, p_keyPressed_2_, p_keyPressed_3_);
     }
 
     @Override
-    public void func_231023_e_() {
-        super.func_231023_e_();
+    public void tick() {
+        super.tick();
         this.textWiget.tick();
     }
 
     @Override
-    public void func_230430_a_(MatrixStack stack, int mouseX, int mouseY, float partialTicks) { // Render?
-        super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        super.render(stack, mouseX, mouseY, partialTicks);
 
-        this.textWiget.func_230430_a_(stack, mouseX, mouseY, partialTicks);
-        this.textWiget.func_230431_b_(stack, mouseX, mouseY, partialTicks); // idk, but it looks about right.
+        this.textWiget.render(stack, mouseX, mouseY, partialTicks);
+        this.textWiget.renderButton(stack, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    public boolean func_231177_au__() {
+    public boolean isPauseScreen() {
         return false;
     }
 }

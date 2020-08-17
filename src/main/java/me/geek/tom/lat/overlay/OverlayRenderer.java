@@ -22,8 +22,6 @@ import java.util.List;
 
 public class OverlayRenderer extends Screen {
 
-    // private static final ResourceLocation BAR_TEXTURE = new ResourceLocation(LookAtThat.MODID, "textures/overlay/bar");
-
     private Item currentItem = Items.AIR;
 
     public BlockInformation currentBlockInfo;
@@ -68,7 +66,7 @@ public class OverlayRenderer extends Screen {
 
         preconfigureRender(width);
 
-        func_238467_a_(stack,5, 5, width, height, 0x88000000);
+        fill(stack,5, 5, width, height, 0x88000000);
 
         boolean canBreak = currentBlockInfo.canHarvest();
         if (!information.isEmpty()) {
@@ -79,43 +77,24 @@ public class OverlayRenderer extends Screen {
 
         int i = 0;
         for (BlockInfoLine line : information) {
-            mc.fontRenderer.func_238421_b_(stack, line.getLine(), 30, 10 + i * 10, line.getColour());
+            mc.fontRenderer.drawString(stack, line.getLine(), 30, 10 + i * 10, line.getColour());
             i++;
         }
         RenderSystem.popMatrix();
     }
 
     private void renderBox(MatrixStack stack, int x, int y, int width, int height, int col) {
-        /*BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
-        RenderSystem.enableBlend();
-        RenderSystem.disableTexture();
-        RenderSystem.defaultBlendFunc();
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);*/
-
         line(stack, x, y, width, false, col);
         line(stack, x, y+height-1, width, false, col);
         line(stack, x, y, height, true, col);
         line(stack, x+width-1, y, height, true, col);
-
-        /*bufferbuilder.finishDrawing();
-        WorldVertexBufferUploader.draw(bufferbuilder);
-        RenderSystem.enableTexture();
-        RenderSystem.disableBlend();*/
     }
 
     private void line(MatrixStack stack, int x, int y, int length, boolean vertical, int col) {
         if (vertical) {
-            /*builder.pos((x+1),      (y),          0.0D).color(red, green, blue, alpha).endVertex();
-            builder.pos((x+1),      (y + length), 0.0D).color(red, green, blue, alpha).endVertex();
-            builder.pos((x),        (y + length), 0.0D).color(red, green, blue, alpha).endVertex();
-            builder.pos((x),        (y),          0.0D).color(red, green, blue, alpha).endVertex();*/
-            func_238467_a_(stack, x, y, x+1, y+length, col);
+            fill(stack, x, y, x+1, y+length, col);
         } else {
-            /*builder.pos((x+length), (y),          0.0D).color(red, green, blue, alpha).endVertex();
-            builder.pos((x+length), (y+1),        0.0D).color(red, green, blue, alpha).endVertex();
-            builder.pos((x),        (y+1),        0.0D).color(red, green, blue, alpha).endVertex();
-            builder.pos((x),        (y),          0.0D).color(red, green, blue, alpha).endVertex();*/
-            func_238467_a_(stack, x, y, x+length, y+1, col);
+            fill(stack, x, y, x+length, y+1, col);
         }
     }
 
@@ -130,8 +109,6 @@ public class OverlayRenderer extends Screen {
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.enableRescaleNormal();
             RenderSystem.enableLighting();
-            short short1 = 240;
-            short short2 = 240;
             RenderHelper.setupGui3DDiffuseLighting();
             try {
                 itemRender.renderItemAndEffectIntoGUI(itm, x, y);

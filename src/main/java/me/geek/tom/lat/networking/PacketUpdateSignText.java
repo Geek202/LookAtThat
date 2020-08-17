@@ -26,7 +26,7 @@ public class PacketUpdateSignText {
     public PacketUpdateSignText(PacketBuffer buf) {
         this.message = buf.readString(32767);
         this.pos = buf.readBlockPos();
-        this.dimension = RegistryKey.func_240903_a_(Registry.field_239699_ae_, buf.readResourceLocation());
+        this.dimension = RegistryKey.func_240903_a_(Registry.WORLD_KEY, buf.readResourceLocation());
     }
 
     public void toBytes(PacketBuffer buf) {

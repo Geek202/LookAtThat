@@ -24,7 +24,9 @@ import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class HudSignBlock extends Block {
     private static final VoxelShape NORTH_SIGN = Block.makeCuboidShape(1d, 4d, 16d, 15d, 12d, 15d);
     private static final VoxelShape SOUTH_SIGN = Block.makeCuboidShape(1d, 4d, 0d, 15d, 12d, 1d);
@@ -37,7 +39,7 @@ public class HudSignBlock extends Block {
                 .sound(SoundType.METAL)
                 .harvestTool(ToolType.PICKAXE)
                 .hardnessAndResistance(5.0f, 5.0f)
-                .func_235838_a_(v -> 14) // Light level
+                .setLightLevel(v -> 14)
         );
     }
 

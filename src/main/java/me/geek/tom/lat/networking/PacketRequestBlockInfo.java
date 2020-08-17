@@ -19,7 +19,7 @@ public class PacketRequestBlockInfo {
     private final BlockPos pos;
 
     public PacketRequestBlockInfo(PacketBuffer buf) {
-        dim = RegistryKey.func_240903_a_(Registry.field_239699_ae_, buf.readResourceLocation());
+        dim = RegistryKey.func_240903_a_(Registry.WORLD_KEY, buf.readResourceLocation());
         pos = buf.readBlockPos();
     }
 

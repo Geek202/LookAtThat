@@ -41,7 +41,6 @@ public class InformationGatherer {
     public static BlockInformation gatherInformation(World world, BlockPos pos, ServerPlayerEntity sender) {
         BlockState state = world.getBlockState(pos);
 
-        //boolean canHarvest = state.canHarvestBlock(world, pos, sender);
         boolean canHarvest;
 
         ItemStack stack = sender.getHeldItemMainhand();

@@ -13,14 +13,14 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.7-1.16.1'
+version = '1.8-1.16.2'
 group = 'me.geek.tom.lat' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'LookAtThat'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200514-1.16'
+    mappings channel: 'snapshot', version: '20200723-1.16.1'
 
     // Dont need, so no purpose.
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -79,7 +79,20 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.1-32.0.14'
+    minecraft 'net.minecraftforge:forge:1.16.2-33.0.5'
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "META-INF/mods.toml"
+        expand "version": project.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "META-INF/mods.toml"
+    }
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

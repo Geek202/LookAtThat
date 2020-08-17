@@ -22,6 +22,8 @@ import net.minecraftforge.fml.common.Mod;
 @SuppressWarnings("deprecation")
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class ClientEventHandler {
+
+    // TODO: Find a better way to detect block changes
     private static float lastPitch = Float.MIN_NORMAL;
     private static float lastYaw = Float.MIN_NORMAL;
     private static BlockPos lastPos;
@@ -73,7 +75,6 @@ public class ClientEventHandler {
                         return;
                     getRenderer().setItem(item);
                     getRenderer().currentBlockInfo = new BlockInformation(false);
-                    //getRenderer().currentBlockInfo.addInformation(new BlockInfoLine("Waiting for server...", 0xFF0000));
                 } else {
                     BlockState state = Minecraft.getInstance().world.getBlockState(((BlockRayTraceResult) result).getPos());
                     getRenderer().setItem(state.getBlock().getItem(Minecraft.getInstance().world, ((BlockRayTraceResult) result).getPos(), state).getItem());

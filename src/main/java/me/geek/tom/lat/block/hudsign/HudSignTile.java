@@ -15,10 +15,12 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class HudSignTile extends TileEntity {
 
-    private LazyOptional<IProvidesLATInfo> latInfoCapability = LazyOptional.of(this::createLatInfo);
+    private final LazyOptional<IProvidesLATInfo> latInfoCapability = LazyOptional.of(this::createLatInfo);
 
     public HudSignTile() {
         super(ModSetup.HUDSIGN_TILE.get());
@@ -29,8 +31,8 @@ public class HudSignTile extends TileEntity {
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-        super.func_230337_a_(state, nbt);
+    public void read(BlockState state, CompoundNBT nbt) {
+        super.read(state, nbt);
         latInfoCapability.ifPresent(handler -> {
             INBT message = nbt.get("message");
             if (message != null) {

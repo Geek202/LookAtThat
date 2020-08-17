@@ -1,8 +1,9 @@
 modLoader="javafml" #mandatory
 loaderVersion="[32,)" #mandatory
+license="MIT"
 [[mods]] #mandatory
 modId="lookatthat" #mandatory
-version="1.4-1.16.1" #mandatory
+version="${version}" #mandatory
 displayName="Look At That" #mandatory
 description='''
 Look at that!
